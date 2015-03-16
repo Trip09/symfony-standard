@@ -1,0 +1,3 @@
+user_counter_homepage:
+    path:     /
+    defaults: { _controller: UserCounterBundle:Default:index }

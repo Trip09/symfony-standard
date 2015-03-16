@@ -1,0 +1,4 @@
+services:
+#    user_counter.example:
+#        class: UserCounterBundle\Example
+#        arguments: [@service_id, "plain_value", %parameter%]

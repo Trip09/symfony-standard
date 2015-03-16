@@ -1,0 +1,25 @@
+{% extends 'base.html.twig' %}
+{% block body %}
+    <form method="POST" name="myForm">
+        <div class="email">
+            Insert e-mail *
+            <br>
+            {{ form_row(form.email) }}
+        </div>
+        <div class="dob" style="margin-top: 20px">
+            DOB *
+            <br>
+            {{ form_row(form.dob) }}
+        </div>
+        <div class="acc" style="margin-top: 20px">
+            Account Number *
+            <br>
+            {{ form_row(form.accountNumber) }}
+            <br>
+            <button type="sumbit" name="submit"> Submit! </button>
+        </div>
+        
+        {{ form_rest(form) }}
+        
+    </form>
+{% endblock %}
