@@ -2,15 +2,15 @@
 <html>
     <head>
         <meta charset="UTF-8" />
-        <title>{% block title %}Welcome!{% endblock %}</title>
+        <title>{% block title %}The Mighty Project!{% endblock %}</title>
         {% block stylesheets %}{% endblock %}
         <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
     </head>
     <body>
         <div class="counters">
-        <p>total visits: </p>
-        <p>unique visits: x </p>
-        <p>Its your Visit # !</p>
+        <p>total visits: {{totalVisits}} </p>
+        <p>unique visits: {{uniqueVisits}} </p>
+        <p>Its your Visit #{{userVisits}}</p>
         <p></p>
         <p></p>
     </div>

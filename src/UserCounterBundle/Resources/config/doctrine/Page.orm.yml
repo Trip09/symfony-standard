@@ -1,4 +1,4 @@
-UserCounterBundle\Entity\User:
+UserCounterBundle\Entity\Page:
     type: entity
     table: null
     id:
@@ -8,13 +8,6 @@ UserCounterBundle\Entity\User:
             generator:
                 strategy: AUTO
     fields:
-        email:
-            type: string
-            length: 255
-        dob:
-            type: date
-        accountNumber:
-            type: integer
-        visits:
+        totalVisits:
             type: integer
     lifecycleCallbacks: {  }

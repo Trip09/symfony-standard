@@ -1,3 +1,7 @@
 user_counter_homepage:
     path:     /
     defaults: { _controller: UserCounterBundle:Default:index }
+
+user_info:
+    path: /info/{{userEmail}}
+    defaults: { _controller: UserCounterBundle:Default:info }

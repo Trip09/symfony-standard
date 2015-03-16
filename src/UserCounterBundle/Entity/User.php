@@ -29,6 +29,11 @@ class User
      */
     private $accountNumber;
 
+    /**
+     * @var integer
+     */
+    private $visits;
+
 
     /**
      * Get id
@@ -107,5 +112,34 @@ class User
     public function getAccountNumber()
     {
         return $this->accountNumber;
+    }
+
+    /**
+     * Set visits
+     *
+     * @param integer $visits
+     * @return User
+     */
+    public function setVisits($visits)
+    {
+        $this->visits = $visits;
+
+        return $this;
+    }
+
+    /**
+     * Get visits
+     *
+     * @return integer 
+     */
+    public function getVisits()
+    {
+        return $this->visits;
+    }
+    
+    public function getAge() {
+        $actualDate = new \DateTime('today');
+        $age = $actualDate->diff($this->dob);
+        return $age->y;
     }
 }
