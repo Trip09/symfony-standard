@@ -25,7 +25,7 @@ class DefaultController extends Controller {
         }
         $uniqueVisits = $manager->createQuery('SELECT COUNT(U.id) FROM UserCounterBundle:User U')
                 ->getSingleScalarResult();
-        
+
         $user = new User();
         $user->setEmail('');
         $user->setDob(new \DateTime('today'));
@@ -34,33 +34,45 @@ class DefaultController extends Controller {
 
         $form = $this->createFormBuilder($user)
                 ->add('email', 'text', array('label' => false))
-                ->add('dob', 'date', array('label' => false,'years' => range(date('Y') -100,date('Y'))))
+                ->add('dob', 'date', array('label' => false, 'years' => range(date('Y') - 100, date('Y'))))
                 ->add('accountNumber', 'integer', array('label' => false))
                 ->getForm();
-
+        $alert = "";
         if ($request->isMethod('POST')) {
             $form->handleRequest($request);
-            $man = $this->getDoctrine()->getEntityManager();
-            $man->persist($user);
-            $man->flush();
-            return $this->redirect($this->generateUrl('user_info', array('userEmail' => $user->getEmail())));
+
+            try {
+                $man = $this->getDoctrine()->getEntityManager();
+                $man->persist($user);
+                $man->flush();
+                $man->clear();
+                return $this->redirect($this->generateUrl('user_info', array('userEmail' => $user->getEmail())));
+            } catch (\Doctrine\DBAL\DBALException $dbalEx) {
+                var_dump($dbalEx->getCode());
+                var_dump($dbalEx->getMessage());
+                exit;
+//                $form->get('email')->addError(new \Symfony\Component\Form\FormError('erro!')); 
+            } catch (\PDOException $pdoEx) {
+                
+            }
         }
-        
 
         return $this->render('UserCounterBundle:Default:index.html.twig', array('form' => $form->createView(),
                     'totalVisits' => $page->getTotalVisits(),
                     'uniqueVisits' => $uniqueVisits,
-                    'userVisits' => $user->getVisits()));
+                    'userVisits' => $user->getVisits(),
+                    'alert' => $alert
+        ));
     }
 
     public function infoAction($userEmail) {
 
         $manager = $this->getDoctrine()->getManager();
-       
+
         $page = $manager->getRepository('UserCounterBundle:Page')->find(1);
-        
+
         $totalVisits = $page->getTotalVisits();
-        
+
         $uniqueVisits = $manager->createQuery('SELECT COUNT(U.id) FROM UserCounterBundle:User U')
                 ->getSingleScalarResult();
 

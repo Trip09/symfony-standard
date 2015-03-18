@@ -11,6 +11,7 @@ UserCounterBundle\Entity\User:
         email:
             type: string
             length: 255
+            unique: true
         dob:
             type: date
         accountNumber:
