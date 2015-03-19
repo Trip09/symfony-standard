@@ -52,4 +52,32 @@ class Page
     {
         return $this->totalVisits;
     }
+    /**
+     * @var integer
+     */
+    private $uniqueVisits;
+
+
+    /**
+     * Set uniqueVisits
+     *
+     * @param integer $uniqueVisits
+     * @return Page
+     */
+    public function setUniqueVisits($uniqueVisits)
+    {
+        $this->uniqueVisits = $uniqueVisits;
+
+        return $this;
+    }
+
+    /**
+     * Get uniqueVisits
+     *
+     * @return integer 
+     */
+    public function getUniqueVisits()
+    {
+        return $this->uniqueVisits;
+    }
 }
