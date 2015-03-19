@@ -27,34 +27,43 @@ class DefaultController extends Controller {
                 ->getSingleScalarResult();
 
         $user = new User();
-        $user->setEmail('');
-        $user->setDob(new \DateTime('today'));
-        $user->setAccountNumber(0);
         $user->setVisits(0);
+        $user->setReference(0); // alterar para nullable no .yml
 
         $form = $this->createFormBuilder($user)
-                ->add('email', 'text', array('label' => false))
-                ->add('dob', 'date', array('label' => false, 'years' => range(date('Y') - 100, date('Y'))))
-                ->add('accountNumber', 'integer', array('label' => false))
+                ->setAction($this->generateUrl('user_counter_homepage'))
+                ->add('email', 'email', array('label' => "Email"))
+                ->add('dob', 'date', array('label' => "Birthdate", 'years' => range(date('Y') - 100, date('Y'))))
+                ->add('accountNumber', 'integer', array('label' => 'Account Number'))
+                ->add('Submit','submit')
                 ->getForm();
+
         $alert = "";
+
         if ($request->isMethod('POST')) {
+
             $form->handleRequest($request);
 
-            try {
-                $man = $this->getDoctrine()->getEntityManager();
-                $man->persist($user);
-                $man->flush();
-                $man->clear();
-                return $this->redirect($this->generateUrl('user_info', array('userEmail' => $user->getEmail())));
-            } catch (\Doctrine\DBAL\DBALException $dbalEx) {
-                var_dump($dbalEx->getCode());
-                var_dump($dbalEx->getMessage());
-                exit;
-//                $form->get('email')->addError(new \Symfony\Component\Form\FormError('erro!')); 
-            } catch (\PDOException $pdoEx) {
-                
-            }
+            if ($form->isValid()) {
+
+                try {
+
+                    $man = $this->getDoctrine()->getManager();
+                    $man->persist($user);
+                    $man->flush();
+                    
+                    $user = $manager->getRepository('UserCounterBundle:User')->findOneByEmail($user->getEmail());
+                    $user->generateReference();
+                    $man->persist($user);
+                    $man->flush();
+                    
+                    $man->clear();
+
+                    return $this->redirect($this->generateUrl('user_info', array('userEmail' => $user->getEmail())));
+                } catch (\Exception $e) {
+                    $this->addFlash('warning', 'erro: ' . $e->getMessage());
+                }
+            } 
         }
 
         return $this->render('UserCounterBundle:Default:index.html.twig', array('form' => $form->createView(),
@@ -64,6 +73,7 @@ class DefaultController extends Controller {
                     'alert' => $alert
         ));
     }
+  
 
     public function infoAction($userEmail) {
 
@@ -79,6 +89,12 @@ class DefaultController extends Controller {
         $user = new User();
 
         $user = $manager->getRepository('UserCounterBundle:User')->findOneByEmail($userEmail);
+        
+        if (!$user instanceof User)
+        {
+            throw $this->createNotFoundException('User does not exist');
+        }
+        
 
         $user->setVisits($user->getVisits() + 1);
 

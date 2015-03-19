@@ -7,8 +7,8 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * User
  */
-class User
-{
+class User {
+
     /**
      * @var integer
      */
@@ -34,14 +34,12 @@ class User
      */
     private $visits;
 
-
     /**
      * Get id
      *
      * @return integer 
      */
-    public function getId()
-    {
+    public function getId() {
         return $this->id;
     }
 
@@ -51,8 +49,7 @@ class User
      * @param string $email
      * @return User
      */
-    public function setEmail($email)
-    {
+    public function setEmail($email) {
         $this->email = $email;
 
         return $this;
@@ -63,8 +60,7 @@ class User
      *
      * @return string 
      */
-    public function getEmail()
-    {
+    public function getEmail() {
         return $this->email;
     }
 
@@ -74,8 +70,7 @@ class User
      * @param \DateTime $dob
      * @return User
      */
-    public function setDob($dob)
-    {
+    public function setDob($dob) {
         $this->dob = $dob;
 
         return $this;
@@ -86,8 +81,7 @@ class User
      *
      * @return \DateTime 
      */
-    public function getDob()
-    {
+    public function getDob() {
         return $this->dob;
     }
 
@@ -97,8 +91,7 @@ class User
      * @param integer $accountNumber
      * @return User
      */
-    public function setAccountNumber($accountNumber)
-    {
+    public function setAccountNumber($accountNumber) {
         $this->accountNumber = $accountNumber;
 
         return $this;
@@ -109,8 +102,7 @@ class User
      *
      * @return integer 
      */
-    public function getAccountNumber()
-    {
+    public function getAccountNumber() {
         return $this->accountNumber;
     }
 
@@ -120,8 +112,7 @@ class User
      * @param integer $visits
      * @return User
      */
-    public function setVisits($visits)
-    {
+    public function setVisits($visits) {
         $this->visits = $visits;
 
         return $this;
@@ -132,14 +123,46 @@ class User
      *
      * @return integer 
      */
-    public function getVisits()
-    {
+    public function getVisits() {
         return $this->visits;
     }
-    
+
     public function getAge() {
         $actualDate = new \DateTime('today');
         $age = $actualDate->diff($this->dob);
         return $age->y;
     }
+
+    /**
+     * @var string
+     */
+    private $reference;
+
+    /**
+     * Set reference
+     *
+     * @param string $reference
+     * @return User
+     */
+    public function setReference($reference) {
+        $this->reference = $reference;
+
+        return $this;
+    }
+
+    /**
+     * Get reference
+     *
+     * @return string 
+     */
+    public function getReference() {
+        return $this->reference;
+    }
+
+    public function generateReference() {
+        $userAccount = "{$this->getAccountNumber()}";
+        $userId = "{$this->getId()}";
+        $this->setReference(str_pad(substr($userAccount, 0, 4),4,'0',STR_PAD_LEFT) . '-' . str_pad($userId,10,'0',STR_PAD_LEFT));
+    }
+
 }

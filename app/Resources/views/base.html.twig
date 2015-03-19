@@ -7,6 +7,12 @@
         <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
     </head>
     <body>
+        {% for msg in app.session.flashbag.get('warning') %}
+            <div class="flash-warning">
+                {{ msg }}
+            </div>
+                
+        {% endfor %}
         <div class="counters">
         <p>total visits: {{totalVisits}} </p>
         <p>unique visits: {{uniqueVisits}} </p>
