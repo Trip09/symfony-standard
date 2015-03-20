@@ -24,7 +24,6 @@ class DefaultController extends Controller {
                 ->getForm();
 
         $alert = '';
-
         if ($request->isMethod('POST')) {
 
             $form->handleRequest($request);
