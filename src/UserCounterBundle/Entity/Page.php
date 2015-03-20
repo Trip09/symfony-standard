@@ -7,8 +7,8 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Page
  */
-class Page
-{
+class Page {
+
     /**
      * @var integer
      */
@@ -19,14 +19,12 @@ class Page
      */
     private $totalVisits;
 
-
     /**
      * Get id
      *
      * @return integer 
      */
-    public function getId()
-    {
+    public function getId() {
         return $this->id;
     }
 
@@ -36,8 +34,7 @@ class Page
      * @param integer $totalVisits
      * @return Page
      */
-    public function setTotalVisits($totalVisits)
-    {
+    public function setTotalVisits($totalVisits) {
         $this->totalVisits = $totalVisits;
 
         return $this;
@@ -48,15 +45,14 @@ class Page
      *
      * @return integer 
      */
-    public function getTotalVisits()
-    {
+    public function getTotalVisits() {
         return $this->totalVisits;
     }
+
     /**
      * @var integer
      */
     private $uniqueVisits;
-
 
     /**
      * Set uniqueVisits
@@ -64,8 +60,7 @@ class Page
      * @param integer $uniqueVisits
      * @return Page
      */
-    public function setUniqueVisits($uniqueVisits)
-    {
+    public function setUniqueVisits($uniqueVisits) {
         $this->uniqueVisits = $uniqueVisits;
 
         return $this;
@@ -76,8 +71,12 @@ class Page
      *
      * @return integer 
      */
-    public function getUniqueVisits()
-    {
+    public function getUniqueVisits() {
         return $this->uniqueVisits;
     }
+
+    public function addTotalVisit() {
+        $this->setTotalVisits($this->getTotalVisits() + 1);
+    }
+
 }

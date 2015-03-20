@@ -6,6 +6,6 @@ user_info:
     path: /info/{userEmail}
     defaults: { _controller: UserCounterBundle:Default:info }
     
-user_info_change:
-    path: /info/change_info/{userEmail}
-    defaults: { _controller: UserCounterBundle:Default:infoChange, userEmail: userEmail }
+user_change_info:
+    path: /change_info/{userEmail}
+    defaults: { _controller: UserCounterBundle:InfoUpdate:infoUpdate }

@@ -18,12 +18,12 @@ class DefaultController extends Controller {
         $form = $this->createFormBuilder($user)
                 ->setAction($this->generateUrl('user_counter_homepage'))
                 ->add('email', 'email', array('label' => 'Email'))
-                ->add('dob', 'date', array('label' => 'Date of Birth', 'years' => range(date('Y') - 100, date('Y') - 18)))
+                ->add('dob', 'date', array('label' => 'Birthdate', 'years' => range(date('Y') - 100, date('Y') - 18)))
                 ->add('accountNumber', 'integer', array('label' => 'Account Number'))
                 ->add('Submit', 'submit')
                 ->getForm();
 
-        $alert = "";
+        $alert = '';
 
         if ($request->isMethod('POST')) {
 
@@ -62,22 +62,21 @@ class DefaultController extends Controller {
     public function infoAction(Request $request, $userEmail) {
 
         $manager = $this->getDoctrine()->getManager();
-        $id = $manager->createQuery('SELECT P.id FROM UserCounterBundle:Page P')->getSingleScalarResult();
-        $page = $manager->getRepository('UserCounterBundle:Page')->find($id);
-
-        $totalVisits = $page->getTotalVisits();
-
-        $uniqueVisits = $page->getUniqueVisits();
 
         $user = $manager->getRepository('UserCounterBundle:User')->findOneByEmail($userEmail);
 
         if (!$user instanceof User) {
-            throw $this->createNotFoundException('User does not exist');
+            throw $this->createNotFoundException('User does not exist!');
         }
 
+        $PageId = $manager->createQuery('SELECT P.id FROM UserCounterBundle:Page P')->getSingleScalarResult();  // gets the Page from DB
+        $page = $manager->getRepository('UserCounterBundle:Page')->find($PageId);
 
-        $user->setVisits($user->getVisits() + 1);
+        $user->addVisit();
+        $page->addTotalVisit();
+
         $manager->persist($user);
+        $manager->persist($page);
         $manager->flush();
 
         $userAge = $user->getAge();
@@ -86,7 +85,7 @@ class DefaultController extends Controller {
 
 
         if ($request->isMethod('POST')) {
-            return $this->redirect($this->generateUrl('user_info_change', array('userEmail' => $user->getEmail(), 'request' => $request)));
+            return $this->redirect($this->generateUrl('user_change_info', array('userEmail' => $user->getEmail(), 'request' => $request)));
         }
 
 
@@ -94,31 +93,6 @@ class DefaultController extends Controller {
                     'userAge' => $userAge,
                     'userDieRisk' => $userDieRisk,
                     'userMortgageRisk' => $userMortagageRisk,
-                    'totalVisits' => $totalVisits,
-                    'uniqueVisits' => $uniqueVisits,
-                    'userVisits' => $user->getVisits()
-        ));
-    }
-
-    public function infoChangeAction(Request $request, $userEmail) {
-
-        if ($request == 'POST') {
-            die("ERTYHUJK");
-        }
-        $manager = $this->getDoctrine()->getManager();
-        $user = $manager->getRepository('UserCounterBundle:User')->findOneByEmail($userEmail);
-        $page = $manager->getRepository('UserCounterBundle:Page')->find(51);
-
-        $form = $this->createFormBuilder($user)
-                ->setAction($this->generateUrl('user_info_change'))
-                ->add('email', 'email', array('label' => 'Email', 'read_only' => 'true'))
-                ->add('dob', 'date', array('label' => 'Birthdate', 'years' => range(date('Y') - 100, date('Y') - 18)))
-                ->add('accountNumber', 'integer', array('label' => 'Account Number'))
-                ->add('Change info', 'submit')
-                ->getForm();
-
-
-        return $this->render('UserCounterBundle:Default:infoChange.html.twig', array('form' => $form->createView(),
                     'totalVisits' => $page->getTotalVisits(),
                     'uniqueVisits' => $page->getUniqueVisits(),
                     'userVisits' => $user->getVisits()
@@ -142,7 +116,7 @@ class DefaultController extends Controller {
         if ($id >= 0) {
 
             $page = $manager->getRepository('UserCounterBundle:Page')->find($id);
-            $page->setTotalVisits($page->getTotalVisits() + 1);
+            $page->addTotalVisit();
             $page->setUniqueVisits($manager->createQuery('SELECT COUNT(U.id) FROM UserCounterBundle:User U')
                             ->getSingleScalarResult());
             $manager->persist($page);
@@ -155,7 +129,7 @@ class DefaultController extends Controller {
 
             if ($page->getUniqueVisits() == 0) {
 
-                $page->setTotalVisits(0);
+                $page->setTotalVisits(1);
             } else {
 
                 $page->setTotalVisits($manager->createQuery('SELECT SUM(U.visits) FROM UserCounterBundle:User U')

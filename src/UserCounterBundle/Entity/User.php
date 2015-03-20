@@ -2,6 +2,7 @@
 
 namespace UserCounterBundle\Entity;
 
+use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -26,6 +27,12 @@ class User {
 
     /**
      * @var integer
+     * @Assert\Length(
+     *          min = 8,
+     *          max = 34,
+     *          minMessage = "Account Number should have at last {{ limit }} characters!",
+     *          maxMessage = "Account Number should have {{ limit }} characters maximum!"
+     * )
      */
     private $accountNumber;
 
@@ -162,7 +169,11 @@ class User {
     public function generateReference() {
         $userAccount = "{$this->getAccountNumber()}";
         $userId = "{$this->getId()}";
-        $this->setReference(str_pad(substr($userAccount, 0, 4),4,'0',STR_PAD_LEFT) . '-' . str_pad($userId,10,'0',STR_PAD_LEFT));
+        $this->setReference(str_pad(substr($userAccount, 0, 4), 4, '0', STR_PAD_LEFT) . '-' . str_pad($userId, 10, '0', STR_PAD_LEFT));
+    }
+
+    public function addVisit() {
+        $this->setVisits($this->getVisits() + 1);
     }
 
 }
