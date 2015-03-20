@@ -1,0 +1,12 @@
+{% extends 'base.html.twig' %}
+{% block body %}
+    <h1> Hi {{ userEmail }} </h1>
+    Based on your age of {{ userAge }} your risk to die is {{ userDieRisk }}%
+    <br>
+    <br>
+    Mortgage risk: {{ userMortgageRisk }}%
+    <br>
+    <br>
+    <br>
+    <a href="http://ze.proj1.com/app_dev.php/change_info/{{ userEmail }}">Click here to change your registration</a>
+{% endblock %}

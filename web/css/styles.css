@@ -1,0 +1,14 @@
+label {
+    float: left;
+    width: 100px;
+}
+
+#form > div {
+    margin-bottom: 10px;
+}
+.flash-warning {
+    border: 1px solid rgb(210, 134, 134);
+    background-color: rgb(228, 187, 187);
+    max-width: 300px;
+    padding: 2px;
+}

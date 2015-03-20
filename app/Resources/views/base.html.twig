@@ -2,11 +2,24 @@
 <html>
     <head>
         <meta charset="UTF-8" />
-        <title>{% block title %}Welcome!{% endblock %}</title>
+        <title>{% block title %}The Mighty Project!{% endblock %}</title>
         {% block stylesheets %}{% endblock %}
         <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
     </head>
     <body>
+        {% for msg in app.session.flashbag.get('warning') %}
+            <div class="flash-warning">
+                {{ msg }}
+            </div>
+                
+        {% endfor %}
+        <div class="counters">
+        <p>total visitors: {{totalVisits}} </p>
+        <p>unique visitors: {{uniqueVisits}} </p>
+        <p>Its your {{userVisits}} visit</p>
+        <p></p>
+        <p></p>
+    </div>
         {% block body %}{% endblock %}
         {% block javascripts %}{% endblock %}
     </body>
